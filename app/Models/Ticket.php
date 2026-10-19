@@ -9,6 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $subject
+ * @property string $category
+ * @property string $description
+ * @property TicketStatus $status
+ * @property bool $requires_anydesk
+ * @property string|null $anydesk_address
+ */
 class Ticket extends Model
 {
     /** @use HasFactory<TicketFactory> */

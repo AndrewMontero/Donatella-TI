@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TicketStatus;
+use App\Models\AuditLog;
 use App\Models\Category;
 use App\Models\Ticket;
 use App\Models\TicketAttachment;
@@ -112,11 +113,22 @@ class TicketController extends Controller
     {
         abort_unless($request->user()->canManageTickets(), 403);
 
+        $previousStatus = $ticket->status;
+
         $validated = $request->validate([
             'status' => ['required', Rule::enum(TicketStatus::class)],
         ]);
 
         $ticket->update($validated);
+
+        if ($previousStatus !== $ticket->status) {
+            AuditLog::record($request->user(), 'ticket.status_updated', $ticket, [
+                'status' => [
+                    'from' => $previousStatus->value,
+                    'to' => $ticket->status->value,
+                ],
+            ], $request->ip());
+        }
 
         return back()->with('status', 'Estado actualizado correctamente.');
     }

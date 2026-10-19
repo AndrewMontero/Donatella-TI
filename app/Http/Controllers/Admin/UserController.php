@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -29,6 +30,9 @@ class UserController extends Controller
 
     public function update(Request $request, User $user): RedirectResponse
     {
+        $previousRole = $user->role;
+        $previousActiveState = $user->is_active;
+
         $rules = [
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ];
@@ -50,6 +54,28 @@ class UserController extends Controller
         }
 
         $user->save();
+
+        $changes = [];
+
+        if ($previousRole !== $user->role) {
+            $changes['role'] = [
+                'from' => $previousRole->value,
+                'to' => $user->role->value,
+            ];
+        }
+
+        if ($previousActiveState !== $user->is_active) {
+            $changes['is_active'] = [
+                'from' => $previousActiveState,
+                'to' => $user->is_active,
+            ];
+        }
+
+        if (filled($validated['password'] ?? null)) {
+            $changes['password_changed'] = true;
+        }
+
+        AuditLog::record($request->user(), 'user.updated', $user, $changes, $request->ip());
 
         return redirect()->route('admin.users.index')
             ->with('status', 'Usuario actualizado correctamente.');

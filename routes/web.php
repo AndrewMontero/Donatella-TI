@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\TicketController;
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('attachments/{attachment}/download', [TicketController::class, 'downloadAttachment'])->name('attachments.download');
 
     Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
+        Route::get('audit-logs', AdminAuditLogController::class)->name('audit-logs.index');
         Route::resource('users', AdminUserController::class)->only(['index', 'edit', 'update']);
         Route::resource('categories', AdminCategoryController::class)->only(['index', 'store', 'update']);
     });
