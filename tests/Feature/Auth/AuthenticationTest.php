@@ -14,7 +14,8 @@ class AuthenticationTest extends TestCase
     {
         $response = $this->get(route('login'));
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertSee('images/donatella-fruit-logo.png');
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void

@@ -7,8 +7,8 @@
         <div class="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
             <div class="flex w-full max-w-sm flex-col gap-2">
                 <a href="{{ route('home') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
-                    <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
-                        <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
+                    <span class="mb-1 flex h-36 w-44 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200 dark:ring-zinc-700">
+                        <x-app-logo-icon class="h-full w-full object-cover" />
                     </span>
                     <span class="text-lg font-semibold">{{ config('app.name', 'Donatella TI') }}</span>
                 </a>
