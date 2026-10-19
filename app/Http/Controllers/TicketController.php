@@ -21,14 +21,52 @@ class TicketController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Ticket::query()->with('user')->latest();
+        $filters = $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+            'status' => ['nullable', Rule::enum(TicketStatus::class)],
+            'category' => ['nullable', 'string', 'max:80', Rule::exists('categories', 'name')],
+        ]);
 
-        if (! $request->user()->canManageTickets()) {
+        $query = Ticket::query()->with('user')->latest();
+        $canManageTickets = $request->user()->canManageTickets();
+
+        if (! $canManageTickets) {
             $query->whereBelongsTo($request->user());
         }
 
+        $search = trim($filters['q'] ?? '');
+
+        if ($search !== '') {
+            $query->where(function ($searchQuery) use ($search, $canManageTickets): void {
+                $searchQuery->where('subject', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+
+                if (ctype_digit($search)) {
+                    $searchQuery->orWhereKey((int) $search);
+                }
+
+                if ($canManageTickets) {
+                    $searchQuery->orWhereHas('user', function ($userQuery) use ($search): void {
+                        $userQuery->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+                }
+            });
+        }
+
+        if (filled($filters['status'] ?? null)) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (filled($filters['category'] ?? null)) {
+            $query->where('category', $filters['category']);
+        }
+
         return view('tickets.index', [
-            'tickets' => $query->paginate(12),
+            'tickets' => $query->paginate(12)->withQueryString(),
+            'statuses' => TicketStatus::cases(),
+            'categories' => Category::query()->orderBy('name')->pluck('name'),
+            'hasFilters' => $search !== '' || filled($filters['status'] ?? null) || filled($filters['category'] ?? null),
         ]);
     }
 

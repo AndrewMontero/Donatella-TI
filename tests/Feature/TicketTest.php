@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\TicketStatus;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -55,5 +56,47 @@ class TicketTest extends TestCase
         $this->actingAs(User::factory()->technician()->create())
             ->get(route('tickets.show', $ticket))
             ->assertOk();
+    }
+
+    public function test_technician_can_search_and_filter_tickets(): void
+    {
+        $technician = User::factory()->technician()->create();
+        $requester = User::factory()->create([
+            'name' => 'María Solano',
+            'email' => 'maria@example.com',
+        ]);
+        $matchingTicket = Ticket::factory()->for($requester)->create([
+            'subject' => 'Problema con impresora de bodega',
+            'category' => 'Impresoras',
+            'status' => TicketStatus::InProgress,
+        ]);
+        $otherTicket = Ticket::factory()->create([
+            'subject' => 'Acceso al correo',
+            'category' => 'Correo',
+            'status' => TicketStatus::New,
+        ]);
+
+        $this->actingAs($technician)
+            ->get(route('tickets.index', [
+                'q' => 'María',
+                'status' => TicketStatus::InProgress->value,
+                'category' => 'Impresoras',
+            ]))
+            ->assertOk()
+            ->assertSee($matchingTicket->subject)
+            ->assertDontSee($otherTicket->subject);
+    }
+
+    public function test_ticket_filters_do_not_expose_another_users_tickets(): void
+    {
+        $user = User::factory()->create();
+        $otherTicket = Ticket::factory()->create([
+            'subject' => 'Incidente privado identificable',
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('tickets.index', ['q' => (string) $otherTicket->id]))
+            ->assertOk()
+            ->assertDontSee($otherTicket->subject);
     }
 }

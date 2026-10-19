@@ -12,6 +12,8 @@ Sistema web de mesa de ayuda para gestionar los tickets de soporte de Grupo Dona
 - Solicitud opcional de soporte por AnyDesk.
 - Comentarios y archivos adjuntos.
 - Panel de control con resumen de tickets.
+- Búsqueda y filtros de tickets por estado y categoría.
+- Categorías administrables e historial de cambios importantes.
 
 ## Tecnologías
 
