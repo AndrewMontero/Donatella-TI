@@ -50,11 +50,23 @@ class TicketTest extends TestCase
     {
         $owner = User::factory()->create();
         $otherUser = User::factory()->create();
-        $ticket = Ticket::factory()->for($owner)->create();
+        $ownTicket = Ticket::factory()->for($owner)->create([
+            'subject' => 'Ticket visible del propietario',
+        ]);
+        $otherTicket = Ticket::factory()->for($otherUser)->create([
+            'subject' => 'Ticket privado de otra persona',
+        ]);
 
-        $this->actingAs($otherUser)->get(route('tickets.show', $ticket))->assertForbidden();
+        $this->actingAs($owner)
+            ->get(route('tickets.index'))
+            ->assertOk()
+            ->assertSee($ownTicket->subject)
+            ->assertDontSee($otherTicket->subject)
+            ->assertDontSee('Panel de control');
+
+        $this->actingAs($otherUser)->get(route('tickets.show', $ownTicket))->assertForbidden();
         $this->actingAs(User::factory()->technician()->create())
-            ->get(route('tickets.show', $ticket))
+            ->get(route('tickets.show', $ownTicket))
             ->assertOk();
     }
 

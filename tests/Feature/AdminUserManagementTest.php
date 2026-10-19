@@ -37,6 +37,34 @@ class AdminUserManagementTest extends TestCase
         $this->assertTrue(Hash::check('NuevaClave123!', $user->password));
     }
 
+    public function test_admin_can_assign_the_admin_role_to_another_user(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $user = User::factory()->create();
+
+        $this->actingAs($admin)->put(route('admin.users.update', $user), [
+            'role' => UserRole::Admin->value,
+            'is_active' => '1',
+        ])->assertRedirect(route('admin.users.index'));
+
+        $this->assertSame(UserRole::Admin, $user->fresh()->role);
+    }
+
+    public function test_admin_can_not_change_their_own_role_or_active_state(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->put(route('admin.users.update', $admin), [
+            'role' => UserRole::User->value,
+            'is_active' => '0',
+        ])->assertRedirect(route('admin.users.index'));
+
+        $admin->refresh();
+
+        $this->assertSame(UserRole::Admin, $admin->role);
+        $this->assertTrue($admin->is_active);
+    }
+
     public function test_self_service_password_reset_routes_are_disabled(): void
     {
         $this->assertFalse(app('router')->has('password.request'));

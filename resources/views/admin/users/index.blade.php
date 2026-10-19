@@ -2,7 +2,7 @@
     <div class="space-y-6">
         <div>
             <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">Administración de usuarios</h1>
-            <p class="text-sm text-zinc-500">Desde aquí puede asignar el rol Técnico, activar cuentas y cambiar contraseñas.</p>
+            <p class="text-sm text-zinc-500">Desde aquí puede asignar roles, activar cuentas y cambiar contraseñas.</p>
         </div>
 
         @if (session('status'))

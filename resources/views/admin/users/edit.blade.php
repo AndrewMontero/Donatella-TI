@@ -10,7 +10,7 @@
             @csrf
             @method('PUT')
 
-            @if (! $managedUser->isAdmin())
+            @if ($managedUser->isNot(auth()->user()))
                 <div>
                     <label for="role" class="mb-2 block text-sm font-medium">Rol</label>
                     <select id="role" name="role" class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800">
@@ -27,7 +27,7 @@
                     Cuenta activa
                 </label>
             @else
-                <div class="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">La cuenta administradora principal no puede desactivarse ni cambiar de rol.</div>
+                <div class="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">Por seguridad, no puede desactivar su propia cuenta ni cambiar su propio rol.</div>
             @endif
 
             <div class="border-t border-zinc-200 pt-5 dark:border-zinc-700">

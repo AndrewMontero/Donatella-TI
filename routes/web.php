@@ -12,11 +12,11 @@ Route::redirect('/', '/login')->name('home');
 
 Route::middleware(['auth', 'active'])->group(function () {
     Route::get('dashboard', function (Request $request) {
-        $query = Ticket::query();
-
         if (! $request->user()->canManageTickets()) {
-            $query->whereBelongsTo($request->user());
+            return redirect()->route('tickets.index');
         }
+
+        $query = Ticket::query();
 
         return view('dashboard', [
             'totalTickets' => (clone $query)->count(),

@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         return view('admin.users.edit', [
             'managedUser' => $user,
-            'roles' => [UserRole::User, UserRole::Technician],
+            'roles' => UserRole::cases(),
         ]);
     }
 
@@ -37,14 +37,14 @@ class UserController extends Controller
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ];
 
-        if (! $user->isAdmin()) {
-            $rules['role'] = ['required', Rule::enum(UserRole::class), Rule::notIn([UserRole::Admin->value])];
+        if ($user->isNot($request->user())) {
+            $rules['role'] = ['required', Rule::enum(UserRole::class)];
             $rules['is_active'] = ['nullable', 'boolean'];
         }
 
         $validated = $request->validate($rules);
 
-        if (! $user->isAdmin()) {
+        if ($user->isNot($request->user())) {
             $user->role = $validated['role'];
             $user->is_active = $request->boolean('is_active');
         }
