@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\TicketController;
 use App\Models\Ticket;
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         Route::resource('users', AdminUserController::class)->only(['index', 'edit', 'update']);
+        Route::resource('categories', AdminCategoryController::class)->only(['index', 'store', 'update']);
     });
 });
 

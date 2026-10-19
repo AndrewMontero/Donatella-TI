@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TicketStatus;
+use App\Models\Category;
 use App\Models\Ticket;
 use App\Models\TicketAttachment;
 use Illuminate\Contracts\View\View;
@@ -166,6 +167,13 @@ class TicketController extends Controller
     /** @return list<string> */
     private function categories(): array
     {
-        return ['Hardware', 'Software', 'Red', 'Accesos', 'Correo', 'Impresoras', 'Otro'];
+        $categories = Category::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['name'])
+            ->map(fn (Category $category): string => $category->name)
+            ->all();
+
+        return array_values($categories);
     }
 }
