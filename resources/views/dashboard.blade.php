@@ -11,7 +11,7 @@
         <div class="grid gap-4 md:grid-cols-3">
             <div class="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900"><p class="text-sm text-zinc-500">Total de tickets</p><p class="mt-2 text-3xl font-semibold">{{ $totalTickets }}</p></div>
             <div class="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900"><p class="text-sm text-zinc-500">Pendientes</p><p class="mt-2 text-3xl font-semibold text-amber-600">{{ $openTickets }}</p></div>
-            <div class="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900"><p class="text-sm text-zinc-500">Cerrados</p><p class="mt-2 text-3xl font-semibold text-emerald-600">{{ $closedTickets }}</p></div>
+            <div class="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900"><p class="text-sm text-zinc-500">Hechos</p><p class="mt-2 text-3xl font-semibold text-emerald-600">{{ $doneTickets }}</p></div>
         </div>
 
         <section class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900">
@@ -23,7 +23,7 @@
                 @forelse ($recentTickets as $ticket)
                     <a href="{{ route('tickets.show', $ticket) }}" class="flex items-center justify-between gap-4 rounded-lg border border-zinc-100 px-4 py-3 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800">
                         <div><p class="font-medium">#{{ $ticket->id }} · {{ $ticket->subject }}</p><p class="text-sm text-zinc-500">{{ $ticket->category }}</p></div>
-                        <span class="text-sm text-zinc-500">{{ $ticket->status->label() }}</span>
+                        <x-ticket-status-badge :status="$ticket->status" />
                     </a>
                 @empty
                     <p class="py-6 text-center text-sm text-zinc-500">No hay tickets registrados.</p>

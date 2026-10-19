@@ -79,7 +79,7 @@
                                     <td class="px-5 py-4">{{ $ticket->user->name }}</td>
                                 @endif
                                 <td class="px-5 py-4">{{ $ticket->category }}</td>
-                                <td class="px-5 py-4">{{ $ticket->status->label() }}</td>
+                                <td class="px-5 py-4"><x-ticket-status-badge :status="$ticket->status" /></td>
                                 <td class="px-5 py-4">{{ $ticket->requires_anydesk ? 'Sí' : 'No' }}</td>
                                 <td class="px-5 py-4">{{ $ticket->created_at->format('d/m/Y H:i') }}</td>
                             </tr>

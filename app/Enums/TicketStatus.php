@@ -4,20 +4,16 @@ namespace App\Enums;
 
 enum TicketStatus: string
 {
-    case New = 'new';
+    case Pending = 'pending';
     case InProgress = 'in_progress';
-    case Waiting = 'waiting';
-    case Resolved = 'resolved';
-    case Closed = 'closed';
+    case Done = 'done';
 
     public function label(): string
     {
         return match ($this) {
-            self::New => 'Nuevo',
+            self::Pending => 'Pendiente',
             self::InProgress => 'En proceso',
-            self::Waiting => 'En espera',
-            self::Resolved => 'Resuelto',
-            self::Closed => 'Cerrado',
+            self::Done => 'Hecho',
         };
     }
 }

@@ -20,8 +20,8 @@ Route::middleware(['auth', 'active'])->group(function () {
 
         return view('dashboard', [
             'totalTickets' => (clone $query)->count(),
-            'openTickets' => (clone $query)->whereNotIn('status', ['resolved', 'closed'])->count(),
-            'closedTickets' => (clone $query)->where('status', 'closed')->count(),
+            'openTickets' => (clone $query)->whereNot('status', 'done')->count(),
+            'doneTickets' => (clone $query)->where('status', 'done')->count(),
             'recentTickets' => $query->latest()->limit(5)->get(),
         ]);
     })->name('dashboard');

@@ -30,6 +30,7 @@ class TicketTest extends TestCase
         $this->assertTrue($ticket->requires_anydesk);
         $this->assertSame('123 456 789', $ticket->anydesk_address);
         $this->assertSame($user->id, $ticket->user_id);
+        $this->assertSame(TicketStatus::Pending, $ticket->status);
     }
 
     public function test_anydesk_address_is_required_when_requested(): void
@@ -85,7 +86,7 @@ class TicketTest extends TestCase
         $otherTicket = Ticket::factory()->create([
             'subject' => 'Acceso al correo',
             'category' => 'Correo',
-            'status' => TicketStatus::New,
+            'status' => TicketStatus::Pending,
         ]);
 
         $this->actingAs($technician)
@@ -110,5 +111,19 @@ class TicketTest extends TestCase
             ->get(route('tickets.index', ['q' => (string) $otherTicket->id]))
             ->assertOk()
             ->assertDontSee($otherTicket->subject);
+    }
+
+    public function test_regular_users_can_not_change_ticket_statuses(): void
+    {
+        $user = User::factory()->create();
+        $ticket = Ticket::factory()->for($user)->create();
+
+        $this->actingAs($user)
+            ->put(route('tickets.update', $ticket), [
+                'status' => TicketStatus::Done->value,
+            ])
+            ->assertForbidden();
+
+        $this->assertSame(TicketStatus::Pending, $ticket->fresh()->status);
     }
 }

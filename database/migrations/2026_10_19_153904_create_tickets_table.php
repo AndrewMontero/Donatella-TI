@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('subject');
             $table->string('category');
             $table->text('description');
-            $table->string('status')->default('new')->index();
+            $table->string('status')->default('pending')->index();
             $table->boolean('requires_anydesk')->default(false);
             $table->string('anydesk_address')->nullable();
             $table->timestamps();

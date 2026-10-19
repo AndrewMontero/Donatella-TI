@@ -24,7 +24,7 @@ class TicketFactory extends Factory
             'subject' => fake()->sentence(5),
             'category' => fake()->randomElement(['Hardware', 'Software', 'Red', 'Accesos', 'Correo', 'Impresoras', 'Otro']),
             'description' => fake()->paragraph(),
-            'status' => TicketStatus::New,
+            'status' => TicketStatus::Pending,
             'requires_anydesk' => false,
             'anydesk_address' => null,
         ];
