@@ -3,8 +3,8 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+    <body class="donatella-app min-h-screen">
+        <flux:sidebar sticky collapsible="mobile" class="donatella-sidebar border-e">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" :href="auth()->user()->canManageTickets() ? route('dashboard') : route('tickets.index')" wire:navigate />
                 <flux:sidebar.collapse class="lg:hidden" />
@@ -20,6 +20,11 @@
                     <flux:sidebar.item icon="ticket" :href="route('tickets.index')" :current="request()->routeIs('tickets.*')" wire:navigate>
                         Tickets
                     </flux:sidebar.item>
+                    @if (auth()->user()->canManageTickets())
+                        <flux:sidebar.item icon="computer-desktop" :href="route('equipment.index')" :current="request()->routeIs('equipment.*')" wire:navigate>
+                            Inventario
+                        </flux:sidebar.item>
+                    @endif
                 </flux:sidebar.group>
 
                 @if (auth()->user()->isAdmin())
@@ -43,7 +48,7 @@
         </flux:sidebar>
 
         <!-- Mobile User Menu -->
-        <flux:header class="lg:hidden">
+        <flux:header class="donatella-sidebar border-b border-pineapple-orange/30 lg:hidden">
             <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
             <flux:spacer />

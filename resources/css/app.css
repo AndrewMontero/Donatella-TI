@@ -11,17 +11,17 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-zinc-50: #fafafa;
-    --color-zinc-100: #f5f5f5;
-    --color-zinc-200: #e5e5e5;
-    --color-zinc-300: #d4d4d4;
+    --color-zinc-50: #fffaf3;
+    --color-zinc-100: #f7efe3;
+    --color-zinc-200: #eadcc9;
+    --color-zinc-300: #d5c4ae;
     --color-zinc-400: #a3a3a3;
-    --color-zinc-500: #737373;
-    --color-zinc-600: #525252;
-    --color-zinc-700: #404040;
-    --color-zinc-800: #262626;
-    --color-zinc-900: #171717;
-    --color-zinc-950: #0a0a0a;
+    --color-zinc-500: #7f7465;
+    --color-zinc-600: #62584c;
+    --color-zinc-700: #45463d;
+    --color-zinc-800: #292a25;
+    --color-zinc-900: #1d211d;
+    --color-zinc-950: #121511;
 
     --color-brand-50: #f4fae9;
     --color-brand-100: #e5f4c9;
@@ -39,18 +39,27 @@
     --color-brand-blue: #263bb8;
     --color-brand-red: #e33b32;
 
-    /* Keep existing utility classes aligned with the Donatella palette. */
-    --color-indigo-50: var(--color-brand-50);
-    --color-indigo-100: var(--color-brand-100);
-    --color-indigo-200: var(--color-brand-200);
-    --color-indigo-300: var(--color-brand-300);
-    --color-indigo-400: var(--color-brand-400);
-    --color-indigo-500: var(--color-brand-500);
-    --color-indigo-600: var(--color-brand-600);
-    --color-indigo-700: var(--color-brand-700);
-    --color-indigo-800: var(--color-brand-800);
-    --color-indigo-900: var(--color-brand-900);
-    --color-indigo-950: var(--color-brand-950);
+    /* Palette inspired by Donatella's pineapple artwork. */
+    --color-pineapple-cream: #fff3df;
+    --color-pineapple-apricot: #efbd82;
+    --color-pineapple-orange: #d98b43;
+    --color-pineapple-leaf: #4d6b4d;
+    --color-pineapple-teal: #52777b;
+    --color-pineapple-bark: #352d27;
+    --color-pineapple-ink: #1d211d;
+
+    /* Primary actions use the warm orange from the pineapple artwork. */
+    --color-indigo-50: #fff7ed;
+    --color-indigo-100: #ffedd5;
+    --color-indigo-200: #fed7aa;
+    --color-indigo-300: #fdba74;
+    --color-indigo-400: #fb923c;
+    --color-indigo-500: #e77d2f;
+    --color-indigo-600: #c96122;
+    --color-indigo-700: #a94a1b;
+    --color-indigo-800: #873b1b;
+    --color-indigo-900: #6f331a;
+    --color-indigo-950: #3c180c;
 
     --color-accent: var(--color-brand-700);
     --color-accent-content: var(--color-brand-700);
@@ -66,6 +75,10 @@
 }
 
 @layer base {
+
+    [x-cloak] {
+        display: none !important;
+    }
 
     *,
     ::after,
@@ -88,6 +101,129 @@ input:focus[data-flux-control],
 textarea:focus[data-flux-control],
 select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+@layer components {
+    .donatella-app {
+        background: var(--color-pineapple-cream);
+    }
+
+    .donatella-main {
+        min-height: 100vh;
+        background-color: #fff8ed;
+        background-image:
+            radial-gradient(circle at 92% 4%, rgb(239 189 130 / 32%), transparent 24rem),
+            radial-gradient(circle at 8% 96%, rgb(77 107 77 / 12%), transparent 30rem);
+    }
+
+    .donatella-sidebar {
+        border-color: color-mix(in srgb, var(--color-pineapple-orange) 42%, transparent);
+        background: color-mix(in srgb, var(--color-pineapple-cream) 78%, var(--color-pineapple-apricot));
+    }
+
+    .dark .donatella-app {
+        background: var(--color-pineapple-ink);
+    }
+
+    .dark .donatella-main {
+        background-color: #242721;
+        background-image:
+            radial-gradient(circle at 92% 4%, rgb(217 139 67 / 13%), transparent 25rem),
+            radial-gradient(circle at 8% 96%, rgb(77 107 77 / 13%), transparent 32rem);
+    }
+
+    .dark .donatella-sidebar {
+        border-color: color-mix(in srgb, var(--color-pineapple-leaf) 58%, transparent);
+        background: color-mix(in srgb, var(--color-pineapple-ink) 82%, var(--color-pineapple-leaf));
+    }
+
+    .ticket-page {
+        --ticket-border: color-mix(in srgb, var(--color-pineapple-orange) 34%, transparent);
+        --ticket-panel: color-mix(in srgb, white 92%, var(--color-pineapple-apricot));
+        --ticket-panel-soft: color-mix(in srgb, var(--color-pineapple-cream) 88%, white);
+    }
+
+    .ticket-hero {
+        border-color: color-mix(in srgb, var(--color-pineapple-orange) 56%, transparent);
+        background:
+            linear-gradient(110deg, var(--color-pineapple-apricot), var(--color-pineapple-cream) 62%),
+            var(--color-pineapple-cream);
+        box-shadow: inset 4px 0 0 var(--color-pineapple-orange);
+    }
+
+    .dark .ticket-page {
+        --ticket-border: color-mix(in srgb, var(--color-pineapple-apricot) 26%, transparent);
+        --ticket-panel: color-mix(in srgb, var(--color-pineapple-ink) 91%, var(--color-pineapple-leaf));
+        --ticket-panel-soft: color-mix(in srgb, var(--color-pineapple-ink) 82%, var(--color-pineapple-bark));
+    }
+
+    .dark .ticket-hero {
+        background:
+            linear-gradient(110deg, color-mix(in srgb, var(--color-pineapple-orange) 22%, var(--color-pineapple-ink)), var(--color-pineapple-ink) 62%),
+            var(--color-pineapple-ink);
+    }
+
+    .ticket-panel {
+        border-color: var(--ticket-border);
+        background: var(--ticket-panel);
+    }
+
+    .ticket-panel-soft {
+        border-color: var(--ticket-border);
+        background: var(--ticket-panel-soft);
+    }
+
+    .ticket-page-link {
+        color: var(--color-pineapple-leaf);
+    }
+
+    .ticket-page-link:hover {
+        color: var(--color-pineapple-bark);
+    }
+
+    .dark .ticket-page-link {
+        color: var(--color-pineapple-apricot);
+    }
+
+    .dark .ticket-page-link:hover {
+        color: var(--color-pineapple-cream);
+    }
+
+    .ticket-page-action {
+        background: var(--color-pineapple-orange);
+        color: var(--color-pineapple-ink);
+    }
+
+    .ticket-page-action:hover {
+        background: var(--color-pineapple-apricot);
+    }
+
+    .ticket-page :is(input, textarea, select):focus {
+        border-color: var(--color-pineapple-orange);
+        outline: 2px solid color-mix(in srgb, var(--color-pineapple-orange) 30%, transparent);
+        outline-offset: 1px;
+    }
+
+    .appearance-toggle {
+        border: 1px solid color-mix(in srgb, var(--color-pineapple-orange) 45%, transparent);
+        background: color-mix(in srgb, white 92%, var(--color-pineapple-cream));
+        color: var(--color-pineapple-bark);
+        box-shadow: 0 10px 24px rgb(53 45 39 / 14%);
+    }
+
+    .appearance-toggle:hover {
+        background: var(--color-pineapple-apricot);
+    }
+
+    .dark .appearance-toggle {
+        background: var(--color-pineapple-bark);
+        color: var(--color-pineapple-cream);
+        box-shadow: 0 10px 24px rgb(0 0 0 / 28%);
+    }
+
+    .dark .appearance-toggle:hover {
+        background: var(--color-pineapple-leaf);
+    }
 }
 
 /* \[:where(&)\]:size-4 {

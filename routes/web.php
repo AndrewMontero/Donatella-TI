@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\TicketController;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
@@ -29,6 +30,14 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::resource('tickets', TicketController::class)->only(['index', 'create', 'store', 'show', 'update']);
     Route::post('tickets/{ticket}/comments', [TicketController::class, 'storeComment'])->name('tickets.comments.store');
     Route::get('attachments/{attachment}/download', [TicketController::class, 'downloadAttachment'])->name('attachments.download');
+
+    Route::middleware('support')->group(function () {
+        Route::resource('equipment', EquipmentController::class)->only(['index', 'create', 'store', 'edit', 'update']);
+        Route::post('equipment-import', [EquipmentController::class, 'import'])->name('equipment.import');
+        Route::get('equipment-template', [EquipmentController::class, 'template'])->name('equipment.template');
+        Route::get('equipment-export/excel', [EquipmentController::class, 'exportExcel'])->name('equipment.export.excel');
+        Route::get('equipment-export/pdf', [EquipmentController::class, 'exportPdf'])->name('equipment.export.pdf');
+    });
 
     Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         Route::get('audit-logs', AdminAuditLogController::class)->name('audit-logs.index');
