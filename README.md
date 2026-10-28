@@ -43,6 +43,7 @@ Sistema web interno de Grupo Donatella para administrar solicitudes de soporte t
 - Técnicos y Administradores también pueden buscar por solicitante o correo.
 - Filtros por estado y categoría.
 - Los filtros permanecen activos al cambiar de página o regresar desde una edición.
+- Reportes mensuales en PDF, generales o filtrados por colaborador.
 
 ### Administración
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\TicketReportController;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,8 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('attachments/{attachment}/download', [TicketController::class, 'downloadAttachment'])->name('attachments.download');
 
     Route::middleware('support')->group(function () {
+        Route::get('reports/tickets', [TicketReportController::class, 'index'])->name('reports.tickets.index');
+        Route::get('reports/tickets/pdf', [TicketReportController::class, 'pdf'])->name('reports.tickets.pdf');
         Route::resource('equipment', EquipmentController::class)->only(['index', 'create', 'store', 'edit', 'update']);
         Route::post('equipment-import', [EquipmentController::class, 'import'])->name('equipment.import');
         Route::get('equipment-template', [EquipmentController::class, 'template'])->name('equipment.template');

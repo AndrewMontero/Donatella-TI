@@ -24,6 +24,9 @@
                         <flux:sidebar.item icon="computer-desktop" :href="route('equipment.index')" :current="request()->routeIs('equipment.*')" wire:navigate>
                             Inventario
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="document-text" :href="route('reports.tickets.index')" :current="request()->routeIs('reports.tickets.*')" wire:navigate>
+                            Reportes
+                        </flux:sidebar.item>
                     @endif
                 </flux:sidebar.group>
 

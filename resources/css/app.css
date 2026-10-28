@@ -105,42 +105,106 @@ select:focus[data-flux-control] {
 
 @layer components {
     .donatella-app {
+        position: relative;
+        isolation: isolate;
         background: var(--color-pineapple-cream);
+    }
+
+    .donatella-app::before,
+    .donatella-app::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        transition: opacity 450ms ease;
+    }
+
+    .donatella-app::before {
+        opacity: 1;
+        background-image:
+            linear-gradient(rgb(255 248 237 / 20%), rgb(255 248 237 / 38%)),
+            url('/images/donatella-plant-day.png');
+    }
+
+    .donatella-app::after {
+        opacity: 0;
+        background-image:
+            linear-gradient(rgb(6 18 32 / 30%), rgb(10 21 19 / 54%)),
+            url('/images/donatella-plant-night.png');
     }
 
     .donatella-main {
         min-height: 100vh;
-        background-color: #fff8ed;
+        background-color: rgb(255 248 237 / 58%);
         background-image:
-            radial-gradient(circle at 92% 4%, rgb(239 189 130 / 32%), transparent 24rem),
-            radial-gradient(circle at 8% 96%, rgb(77 107 77 / 12%), transparent 30rem);
+            radial-gradient(circle at 92% 4%, rgb(239 189 130 / 24%), transparent 24rem),
+            radial-gradient(circle at 8% 96%, rgb(77 107 77 / 10%), transparent 30rem);
+        backdrop-filter: blur(2px) saturate(108%);
     }
 
     .donatella-sidebar {
         border-color: color-mix(in srgb, var(--color-pineapple-orange) 42%, transparent);
-        background: color-mix(in srgb, var(--color-pineapple-cream) 78%, var(--color-pineapple-apricot));
+        background: rgb(255 243 223 / 76%);
+        box-shadow: 12px 0 34px rgb(53 45 39 / 12%);
+        backdrop-filter: blur(18px) saturate(120%);
     }
 
     .dark .donatella-app {
         background: var(--color-pineapple-ink);
     }
 
+    .dark .donatella-app::before {
+        opacity: 0;
+    }
+
+    .dark .donatella-app::after {
+        opacity: 1;
+    }
+
     .dark .donatella-main {
-        background-color: #242721;
+        background-color: rgb(18 21 17 / 62%);
         background-image:
-            radial-gradient(circle at 92% 4%, rgb(217 139 67 / 13%), transparent 25rem),
-            radial-gradient(circle at 8% 96%, rgb(77 107 77 / 13%), transparent 32rem);
+            radial-gradient(circle at 92% 4%, rgb(217 139 67 / 11%), transparent 25rem),
+            radial-gradient(circle at 8% 96%, rgb(77 107 77 / 10%), transparent 32rem);
+        backdrop-filter: blur(2px) saturate(112%);
     }
 
     .dark .donatella-sidebar {
         border-color: color-mix(in srgb, var(--color-pineapple-leaf) 58%, transparent);
-        background: color-mix(in srgb, var(--color-pineapple-ink) 82%, var(--color-pineapple-leaf));
+        background: rgb(18 28 21 / 78%);
+        box-shadow: 12px 0 34px rgb(0 0 0 / 24%);
+    }
+
+    .donatella-main :is(div, section, article, form)[class~='bg-white'] {
+        background-color: rgb(255 255 255 / 76%) !important;
+        box-shadow: 0 16px 44px rgb(53 45 39 / 9%);
+        backdrop-filter: blur(15px) saturate(118%);
+    }
+
+    .donatella-main :is(thead, div, section)[class~='bg-zinc-50'] {
+        background-color: rgb(255 250 243 / 70%) !important;
+        backdrop-filter: blur(12px) saturate(112%);
+    }
+
+    .dark .donatella-main :is(div, section, article, form)[class~='dark:bg-zinc-900'] {
+        background-color: rgb(18 21 17 / 74%) !important;
+        box-shadow: 0 18px 46px rgb(0 0 0 / 20%);
+        backdrop-filter: blur(16px) saturate(112%);
+    }
+
+    .dark .donatella-main :is(thead, div, section)[class~='dark:bg-zinc-800'] {
+        background-color: rgb(41 42 37 / 72%) !important;
+        backdrop-filter: blur(12px) saturate(108%);
     }
 
     .ticket-page {
         --ticket-border: color-mix(in srgb, var(--color-pineapple-orange) 34%, transparent);
-        --ticket-panel: color-mix(in srgb, white 92%, var(--color-pineapple-apricot));
-        --ticket-panel-soft: color-mix(in srgb, var(--color-pineapple-cream) 88%, white);
+        --ticket-panel: rgb(255 255 255 / 76%);
+        --ticket-panel-soft: rgb(255 243 223 / 70%);
     }
 
     .ticket-hero {
@@ -153,8 +217,8 @@ select:focus[data-flux-control] {
 
     .dark .ticket-page {
         --ticket-border: color-mix(in srgb, var(--color-pineapple-apricot) 26%, transparent);
-        --ticket-panel: color-mix(in srgb, var(--color-pineapple-ink) 91%, var(--color-pineapple-leaf));
-        --ticket-panel-soft: color-mix(in srgb, var(--color-pineapple-ink) 82%, var(--color-pineapple-bark));
+        --ticket-panel: rgb(18 21 17 / 76%);
+        --ticket-panel-soft: rgb(35 37 31 / 70%);
     }
 
     .dark .ticket-hero {
@@ -166,11 +230,13 @@ select:focus[data-flux-control] {
     .ticket-panel {
         border-color: var(--ticket-border);
         background: var(--ticket-panel);
+        backdrop-filter: blur(16px) saturate(115%);
     }
 
     .ticket-panel-soft {
         border-color: var(--ticket-border);
         background: var(--ticket-panel-soft);
+        backdrop-filter: blur(14px) saturate(112%);
     }
 
     .ticket-page-link {
