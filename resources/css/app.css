@@ -127,14 +127,14 @@ select:focus[data-flux-control] {
         opacity: 1;
         background-image:
             linear-gradient(rgb(255 248 237 / 20%), rgb(255 248 237 / 38%)),
-            url('/images/donatella-plant-day.png');
+            url('/images/donatella-plant-day.webp');
     }
 
     .donatella-app::after {
         opacity: 0;
         background-image:
             linear-gradient(rgb(6 18 32 / 30%), rgb(10 21 19 / 54%)),
-            url('/images/donatella-plant-night.png');
+            url('/images/donatella-plant-night.webp');
     }
 
     .donatella-main {
