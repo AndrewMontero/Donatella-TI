@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\EquipmentCategory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,8 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Equipment extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'collaborator_name',
         'category',

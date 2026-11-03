@@ -6,8 +6,10 @@ use App\Enums\EquipmentCategory;
 use App\Models\Equipment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -16,6 +18,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -145,7 +148,7 @@ class EquipmentController extends Controller
         $records = collect($records)->map(function (array $record) use ($timestamp): array {
             $identity = collect($record)->only(['collaborator_name', 'category', 'movement', 'movement_date', 'department', 'society', 'phone_number'])->all();
 
-            return [...$record, 'import_key' => hash('sha256', json_encode($identity, JSON_UNESCAPED_UNICODE)), 'created_at' => $timestamp, 'updated_at' => $timestamp];
+            return [...$record, 'import_key' => hash('sha256', json_encode($identity, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)), 'created_at' => $timestamp, 'updated_at' => $timestamp];
         })->all();
 
         DB::transaction(fn () => Equipment::query()->upsert(
@@ -202,7 +205,7 @@ class EquipmentController extends Controller
         return $this->downloadSpreadsheet($spreadsheet, 'inventario-donatella-'.now()->format('Y-m-d').'.xlsx');
     }
 
-    public function exportPdf(Request $request)
+    public function exportPdf(Request $request): Response
     {
         [, $query] = $this->filteredQuery($request);
         $items = $query->orderBy('category')->orderBy('collaborator_name')->get();
@@ -211,6 +214,7 @@ class EquipmentController extends Controller
             ->setPaper('a4', 'landscape')->download('inventario-donatella-'.now()->format('Y-m-d').'.pdf');
     }
 
+    /** @return array{0: array<string, mixed>, 1: Builder<Equipment>} */
     private function filteredQuery(Request $request): array
     {
         $filters = $request->validate([
@@ -238,6 +242,7 @@ class EquipmentController extends Controller
         return [$filters, $query];
     }
 
+    /** @return array<string, mixed> */
     private function validated(Request $request): array
     {
         $validated = $request->validate([
@@ -271,11 +276,13 @@ class EquipmentController extends Controller
         return $value === '' ? null : $value;
     }
 
+    /** @return list<string> */
     private function officialHeaders(): array
     {
         return ['tipo_de_activo', 'movimiento', 'fecha', 'colaborador', 'area_o_puesto', 'sociedad', 'linea_empresarial', 'numero_celular', 'estado', 'archivo_de_origen'];
     }
 
+    /** @return list<string> */
     private function officialHeaderLabels(): array
     {
         return ['Tipo de activo', 'Movimiento', 'Fecha', 'Colaborador', 'Área o puesto', 'Sociedad', 'Línea empresarial', 'Número celular', 'Estado', 'Archivo de origen'];
@@ -297,7 +304,11 @@ class EquipmentController extends Controller
         return $spreadsheet;
     }
 
-    private function styleUnifiedSheet($sheet, array $headerRows, array $titleRows): void
+    /**
+     * @param  list<int>  $headerRows
+     * @param  list<int>  $titleRows
+     */
+    private function styleUnifiedSheet(Worksheet $sheet, array $headerRows, array $titleRows): void
     {
         foreach ($headerRows as $row) {
             $sheet->getStyle("A{$row}:J{$row}")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF');

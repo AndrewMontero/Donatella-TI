@@ -33,8 +33,9 @@ class TicketReportController extends Controller
 
         $start = Carbon::createFromFormat('Y-m-d', $validated['month'].'-01')->startOfMonth();
         $end = $start->copy()->endOfMonth();
-        $selectedUser = filled($validated['user_id'] ?? null)
-            ? User::query()->findOrFail($validated['user_id'])
+        $userId = $validated['user_id'] ?? null;
+        $selectedUser = filled($userId)
+            ? User::query()->findOrFail((int) $userId)
             : null;
 
         $query = Ticket::query()
@@ -47,7 +48,9 @@ class TicketReportController extends Controller
         }
 
         $tickets = $query->get();
-        $monthLabel = ucfirst($start->locale('es')->translatedFormat('F Y'));
+        $labelDate = $start->copy();
+        $labelDate->locale('es');
+        $monthLabel = ucfirst($labelDate->translatedFormat('F Y'));
 
         $pdf = Pdf::loadView('reports.tickets.pdf', [
             'tickets' => $tickets,
